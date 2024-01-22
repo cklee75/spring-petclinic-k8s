@@ -101,12 +101,12 @@ spec:
             - secretRef:
                 name: app-wavefront
                 optional: true
-          env:
-            - name: SPRING_DATASOURCE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  key: mysql-password
-                  name: pdb-mysql
+          # env:
+          #   - name: SPRING_DATASOURCE_PASSWORD
+          #     valueFrom:
+          #       secretKeyRef:
+          #         key: mysql-password
+          #         name: pdb-mysql
           ports:
             - name: http
               containerPort: 8080
@@ -166,12 +166,12 @@ spec:
             - secretRef:
                 name: app-wavefront
                 optional: true
-          env:
-            - name: SPRING_DATASOURCE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  key: mysql-password
-                  name: pdb-mysql
+          # env:
+          #   - name: SPRING_DATASOURCE_PASSWORD
+          #     valueFrom:
+          #       secretKeyRef:
+          #         key: mysql-password
+          #         name: pdb-mysql
           ports:
             - name: http
               containerPort: 8080
@@ -231,12 +231,12 @@ spec:
             - secretRef:
                 name: app-wavefront
                 optional: true
-          env:
-            - name: SPRING_DATASOURCE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  key: mysql-password
-                  name: pdb-mysql
+          # env:
+          #   - name: SPRING_DATASOURCE_PASSWORD
+          #     valueFrom:
+          #       secretKeyRef:
+          #         key: mysql-password
+          #         name: pdb-mysql
           ports:
             - name: http
               containerPort: 8080
