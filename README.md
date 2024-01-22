@@ -104,7 +104,8 @@ Run these commands to create a MySQL database:
 
 ```bash
 $ kubectl create ns spring-petclinic
-$ helm upgrade pdb bitnami/mysql -n spring-petclinic -f k8s/services/mysql/values.yml --version 6.14.4 --install
+$ helm repo add bitnami https://charts.bitnami.com/bitnami
+$ helm upgrade pdb bitnami/mysql -n spring-petclinic -f k8s/services/mysql/values.yml --install
 ```
 
 If you want to enable Wavefront integration, you need to deploy a proxy first. [Follow this guide](https://docs.wavefront.com/kubernetes.html)
@@ -142,6 +143,24 @@ $ kubectl -n spring-petclinic create secret generic app-wavefront --from-literal
 
 You're almost there!
 
+-- CK
+
+  MYSQL_ROOT_PASSWORD=$(kubectl get secret --namespace spring-petclinic pdb-mysql -o jsonpath="{.data.mysql-root-password}" | base64 -d)
+
+To connect to your database:
+
+  1. Run a pod that you can use as a client:
+
+      kubectl run pdb-mysql-client --rm --tty -i --restart='Never' --image  docker.io/bitnami/mysql:8.0.36-debian-11-r0 --namespace spring-petclinic --env MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD --command -- bash
+
+  2. To connect to primary service (read/write):
+
+      mysql -h pdb-mysql.spring-petclinic.svc.cluster.local -uroot -p"$MYSQL_ROOT_PASSWORD"
+
+  3. create database petclinic;
+
+--
+
 Deploy the application to your cluster:
 
 ```bash
@@ -151,6 +170,7 @@ $ kubectl apply -f k8s
 The application is not publicly accessible: you need to create a Kubernetes service. Depending on your cluster configuration, you may have to use an `Ingress` route or a `LoadBalancer` to expose your application.
 
 Run this command to use an ingress route (edit file `k8s/ingress/ingress.yml` first to set the route):
+
 
 ```bash
 $ kubectl apply -f k8s/ingress
@@ -164,3 +184,31 @@ $ kubectl apply -f k8s/loadbalancer
 Congratulations: you're done!
 
 ![Spring Petclinic Microservices screenshot](docs/application-screenshot.png)
+
+
+# README
+Release "pdb" does not exist. Installing it now.
+NAME: pdb
+LAST DEPLOYED: Fri Jan 19 15:26:49 2024
+NAMESPACE: spring-petclinic
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+NOTES:
+CHART NAME: mysql
+CHART VERSION: 9.17.1
+APP VERSION: 8.0.36
+
+** Please be patient while the chart is being deployed **
+
+Tip:
+
+  Watch the deployment status using the command: kubectl get pods -w --namespace spring-petclinic
+
+Services:
+
+  echo Primary: pdb-mysql.spring-petclinic.svc.cluster.local:3306
+
+Execute the following to get the administrator credentials:
+
+  echo Username: root
